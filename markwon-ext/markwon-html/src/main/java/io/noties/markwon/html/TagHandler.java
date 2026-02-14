@@ -2,7 +2,9 @@ package io.noties.markwon.html;
 
 import androidx.annotation.NonNull;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import io.noties.markwon.MarkwonVisitor;
 
@@ -28,7 +30,12 @@ public abstract class TagHandler {
 
         TagHandler handler;
 
-        for (HtmlTag.Block child : block.children()) {
+        List<HtmlTag.Block> children = block.children();
+        if (children.isEmpty()) {
+            return;
+        }
+
+        for (HtmlTag.Block child : new ArrayList<>(children)) {
 
             if (!child.isClosed()) {
                 continue;
@@ -42,4 +49,5 @@ public abstract class TagHandler {
             }
         }
     }
+
 }

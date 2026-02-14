@@ -3,6 +3,7 @@ package io.noties.markwon.html;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -39,7 +40,7 @@ class MarkwonHtmlRendererImpl extends MarkwonHtmlRenderer {
 
                 TagHandler handler;
 
-                for (HtmlTag.Inline inline : tags) {
+                for (HtmlTag.Inline inline : new ArrayList<>(tags)) {
 
                     // if tag is not closed -> do not render
                     if (!inline.isClosed()) {
@@ -60,7 +61,7 @@ class MarkwonHtmlRendererImpl extends MarkwonHtmlRenderer {
 
                 TagHandler handler;
 
-                for (HtmlTag.Block block : tags) {
+                for (HtmlTag.Block block : new ArrayList<>(tags)) {
 
                     if (!block.isClosed()) {
                         continue;
@@ -70,8 +71,11 @@ class MarkwonHtmlRendererImpl extends MarkwonHtmlRenderer {
                     if (handler != null) {
                         handler.handle(visitor, MarkwonHtmlRendererImpl.this, block);
                     } else {
-                        // see if any of children can be handled
-                        apply(block.children());
+                        List<HtmlTag.Block> children = block.children();
+                        if (!children.isEmpty()) {
+                            // see if any of children can be handled
+                            apply(new ArrayList<>(children));
+                        }
                     }
                 }
             }
